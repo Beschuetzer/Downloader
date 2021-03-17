@@ -1,0 +1,95 @@
+﻿<Window x:Class="Downloader.StringArrayMaker"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Downloader"
+        mc:Ignorable="d"
+        SizeToContent="WidthAndHeight"
+        Title="String Array Maker Tool"  MinHeight="255" MinWidth="420" MaxWidth="420">
+    <Window.CommandBindings>
+        <CommandBinding Command="local:Command.StringArrayMakerOk"  Executed="CommandBinding_Executed" CanExecute="CommandBinding_CanExecute" />
+    </Window.CommandBindings>
+    <Window.Resources>
+        <Style x:Key= "errorAwareTextBox" TargetType= "{x:Type TextBox}" >
+            <Style.Triggers >
+                <Trigger Property = "Validation.HasError" Value= "true" >
+                    <Setter Property = "ToolTip"  Value= "{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}" />
+                </Trigger >
+            </Style.Triggers >
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Margin" Value="5 5 5 5"/>
+            <Setter Property="Width" Value="350"/>
+        </Style >
+        <Style TargetType="{x:Type CheckBox}">
+            <Setter Property="Margin" Value="5 0 5 5"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontWeight" Value="Regular"/>
+            <Setter Property="Margin" Value="0"/>
+        </Style>
+    </Window.Resources >
+    <DockPanel >
+        <DockPanel.Resources>
+            <Style TargetType="{x:Type Border}">
+                <Setter Property="Margin" Value="5 5 5 5"/>
+                <Setter Property="BorderBrush" Value="#FF9F9A8A"/>
+                <Setter Property="BorderThickness" Value="2.5"/>
+                <Setter Property="CornerRadius" Value="10"/>
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                            <GradientStop Color="White" Offset="0" />
+                            <GradientStop Color="LightBlue" Offset=".5" />
+                            <GradientStop Color="White" Offset="1.3" />
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect BlurRadius="1" ShadowDepth="1.25" Color="#FF166F96" Direction="315"/>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </DockPanel.Resources>
+        <Border>
+            <Grid Margin="15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="auto" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <DockPanel LastChildFill="True">
+                    <Label Grid.Column="0" Margin="0 -5 0 -5" DockPanel.Dock="Top" FontFamily="16" Content="_List of Items (Specify Item Separator below):" Target="TextBox_ListOfItems"/>
+                    <TextBox x:Name="TextBox_ListOfItems" Height="Auto" TextWrapping="Wrap" Text="," DockPanel.Dock="Top" Grid.Column="0"  Grid.ColumnSpan="2" Grid.RowSpan="3" GotFocus="textbox_GotFocus" Style="{StaticResource errorAwareTextBox}"/>
+                </DockPanel>
+                <StackPanel Grid.Row="1">
+                    <StackPanel Orientation="Horizontal">
+                        <Label Grid.Column="0" Margin="0 5 0 0" DockPanel.Dock="Top" FontFamily="16" Content="_Item Separator:" Target="TextBox_ItemSurrounder"/>
+                        <TextBox x:Name="TextBox_Separator" Height="20" Width="25" HorizontalContentAlignment="Center" Style="{StaticResource errorAwareTextBox}" PreviewTextInput="VerifyOneCharacter2"  DataObject.Pasting="MaskTextBoxInput2" DockPanel.Dock="Top" Grid.Column="0"  Grid.ColumnSpan="2" Grid.RowSpan="3" GotFocus="textbox_GotFocus"/>
+                        <Label Grid.Column="0" Margin="0 5 0 0" DockPanel.Dock="Top" FontFamily="16" Content="_Character to surround Items with:" Target="TextBox_ItemSurrounder"/>
+                        <TextBox x:Name="TextBox_ItemSurrounder" Height="20" Width="25" HorizontalContentAlignment="Center" Style="{StaticResource errorAwareTextBox}" Text="" PreviewTextInput="VerifyOneCharacter"  DataObject.Pasting="MaskTextBoxInput" DockPanel.Dock="Top" Grid.Column="0"  Grid.ColumnSpan="2" Grid.RowSpan="3" GotFocus="textbox_GotFocus"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical">
+                        <Label Grid.Column="0" Margin="0 5 0 -5" DockPanel.Dock="Top" FontFamily="16" Content="_Path to Output the File to:" Target="TextBox_FileOut"/>
+                        <TextBox x:Name="TextBox_FileOut" Style="{StaticResource errorAwareTextBox}" DockPanel.Dock="Top" Grid.Column="0"  Grid.ColumnSpan="2" Grid.RowSpan="3" GotFocus="textbox_GotFocus"/>
+                        <CheckBox x:Name="CheckBox_DefaultToDesktop" FontSize="10" FontStyle="Italic" Content="_Use Desktop as Output Path" IsChecked="True" Checked="CheckBox_DefaultToDesktop_Checked" Unchecked="CheckBox_DefaultToDesktop_Unchecked"/>
+                    </StackPanel>
+
+                </StackPanel>
+                <WrapPanel Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Right" Margin="0,15,0,0">
+                    <Button IsDefault="True"  MinWidth="60" Margin="0,0,10,0" Command="local:Command.StringArrayMakerOk">_Ok</Button>
+                    <Button IsCancel="True" MinWidth="60" Click="Button_Click">C_ancel</Button>
+                </WrapPanel>
+            </Grid>
+        </Border>
+    </DockPanel>
+</Window>

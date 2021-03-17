@@ -1,0 +1,49 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Downloader WPF", "Downloader WPF.csproj", "{A24273BB-3AE6-4A70-A1E2-AB5B341B0688}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Snippet and Testing", "..\Snippet and Testing\Snippet and Testing.csproj", "{D6C8F06F-FA08-4259-8609-26344E3C2D07}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListBox Selection Tricks", "..\ListBox Selection Tricks\ListBox Selection Tricks.csproj", "{88CB3057-514D-425D-84D6-878A51073B6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComboBox WPF Tutorial", "..\ComboBox WPF Tutorial\ComboBox WPF Tutorial.csproj", "{321231EB-6B49-4D9E-9769-076031617424}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ListView Tutorial", "..\ListView Tutorial\ListView Tutorial.csproj", "{FB224574-C015-4ECC-A2F8-51DA1AF8ACA8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A24273BB-3AE6-4A70-A1E2-AB5B341B0688}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A24273BB-3AE6-4A70-A1E2-AB5B341B0688}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A24273BB-3AE6-4A70-A1E2-AB5B341B0688}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A24273BB-3AE6-4A70-A1E2-AB5B341B0688}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6C8F06F-FA08-4259-8609-26344E3C2D07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6C8F06F-FA08-4259-8609-26344E3C2D07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6C8F06F-FA08-4259-8609-26344E3C2D07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6C8F06F-FA08-4259-8609-26344E3C2D07}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88CB3057-514D-425D-84D6-878A51073B6C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88CB3057-514D-425D-84D6-878A51073B6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88CB3057-514D-425D-84D6-878A51073B6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88CB3057-514D-425D-84D6-878A51073B6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{321231EB-6B49-4D9E-9769-076031617424}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{321231EB-6B49-4D9E-9769-076031617424}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{321231EB-6B49-4D9E-9769-076031617424}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{321231EB-6B49-4D9E-9769-076031617424}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB224574-C015-4ECC-A2F8-51DA1AF8ACA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB224574-C015-4ECC-A2F8-51DA1AF8ACA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB224574-C015-4ECC-A2F8-51DA1AF8ACA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB224574-C015-4ECC-A2F8-51DA1AF8ACA8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A4561219-C67C-49CC-9EA2-F3081C61BC98}
+	EndGlobalSection
+EndGlobal

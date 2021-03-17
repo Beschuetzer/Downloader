@@ -1,0 +1,229 @@
+﻿<Window x:Class="Downloader.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Downloader"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="Recursive Web Media Downloader" >
+    <Window.CommandBindings>
+        <CommandBinding Command="local:Command.ResetBoxes"  Executed="CommandBinding_Executed" CanExecute="CommandBinding_CanExecute" />
+        <CommandBinding Command="local:Command.Download"  Executed="CommandBinding_Executed" CanExecute="CommandBinding_CanExecute" />
+        <CommandBinding Command="local:Command.ShowDownloadLog"  Executed="CommandBinding_Executed" CanExecute="CommandBinding_CanExecute" />
+        <CommandBinding Command="local:Command.SubmitDate"  Executed="CommandBinding_Executed" CanExecute="CommandBinding_CanExecute" />
+        <CommandBinding Command="local:Command.ShowRenamingWindow"  Executed="CommandBinding_Executed" CanExecute="CommandBinding_CanExecute" />
+        <CommandBinding Command="local:Command.Cancel"  Executed="CommandBinding_Executed" CanExecute="CommandBinding_CanExecute" />
+        <CommandBinding Command="local:Command.ShowStringArrayMakerWindow"  Executed="CommandBinding_Executed" CanExecute="CommandBinding_CanExecute" />
+        <CommandBinding Command="local:Command.Exit"  Executed="CommandBinding_Executed" CanExecute="CommandBinding_CanExecute" />
+        <CommandBinding Command="local:Command.ShowFinderWindow"  Executed="CommandBinding_Executed" CanExecute="CommandBinding_CanExecute" />   
+    </Window.CommandBindings>
+    <Window.Resources>
+        <System:Double x:Key="theMargin">5</System:Double>
+        <System:Double x:Key="Extramargin">10</System:Double>
+        <System:Double x:Key="DropShadowShadowDepth">1</System:Double>
+        <System:Double x:Key="DropShadowBlurRadius">1</System:Double>
+        <System:Double x:Key="DropShadowDirection">315</System:Double>
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Width" Value="70"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style TargetType="{x:Type ComboBox}">
+            <Setter Property="Background" Value="Black"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="0"/>
+        </Style>
+        <Style x:Key="errorAwareTextBox" TargetType="{x:Type TextBox}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="ToolTip"  Value="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+            <Setter Property="Background" Value="AliceBlue"/>
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="MaxWidth" Value="275"/>
+        </Style>
+    </Window.Resources>
+     <DockPanel LastChildFill="True">
+        <DockPanel.Resources>
+            <Style TargetType="{x:Type Border}">
+                <Setter Property="Margin" Value="5 5 5 5"/>
+                <Setter Property="BorderBrush" Value="#FF9F9A8A"/>
+                <Setter Property="BorderThickness" Value="2.5"/>
+                <Setter Property="CornerRadius" Value="10"/>
+                <Setter Property="Background">
+                    <Setter.Value>
+                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                            <GradientStop Color="White" Offset="0" />
+                            <GradientStop Color="LightBlue" Offset=".5" />
+                            <GradientStop Color="White" Offset="1.3" />
+                        </LinearGradientBrush>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect BlurRadius="1" ShadowDepth="1.25" Color="#FF166F96" Direction="315"/>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </DockPanel.Resources>
+        <Menu x:Name="MainMenu" Width="auto" DockPanel.Dock="Top" Grid.Row="0" HorizontalAlignment= "Left"  Margin="0 0 0 0" >
+            <MenuItem Header="_File">
+                <MenuItem Header="_Exit"  Command="local:Command.Exit" />
+            </MenuItem>
+            <MenuItem Header="_Options">
+                <MenuItem Name="MenuItem_CreateFolder" Header="_Create a Sub-Folder at the Chosen Path (when selecting in GUI)" ToolTip="If Unselected, All Files will be Saved in 'Destination\Files' rather than 'Destination\Folder\Files'" IsCheckable="True" IsChecked="{Binding Path=MenuItem_CreateFolder_Flag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <MenuItem Name="MenuItem_Download_Async" Header="Download _Multiple Files at a Time (Faster but Slightly Less Reliable)" IsCheckable="True" IsChecked="{Binding Path=DownloadAsync, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <MenuItem Name="MenuItem_KeepTrackOfFilesDownloaded" Header="Log URLs with Filenames and Only Download New Files" IsCheckable="True" IsChecked="{Binding Path=MenuItem_KeepTrackOfFilesDownloaded_Flag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="If Selected, Writes the Filename and Corresponding URL to a TXT File Named 'urls.txt'.  Also, will not Download the Same URL Again if Enabled."/>
+                <MenuItem Name="MenuItem_RenameFiles" Header="Rename Files _After Download Completion" ToolTip="Uses Pattern 'FolderName - IDv3 Title', if IDv3 Tag is Present Otherwise 'FolderName - Filename_Suffix'" IsCheckable="True"  IsChecked="{Binding Path=MenuItem_RenameFiles_Flag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <MenuItem Name="MenuItem_DisplayResults" Header="Display Renaming Results After Every Batch" ToolTip="If Selected, a Message Box will Display How Many Files Renamed for Each Batch.  This will Pause Execution Until Okayed." IsCheckable="True"  IsChecked="{Binding Path=MenuItem_DisplayResults_Flag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                <Separator/>
+                <MenuItem Header="Only Download _New Files">
+                    <MenuItem Name="MenuItem_Download_By_Date" Header="Download Files Newer than _Last Download Date" ToolTip="Only Works if a 'date.txt' File is in Destination, and it has a Date in it." local:MenuItemExtensions.GroupName="DownloadNew" IsCheckable="True" IsChecked="{Binding Path=MenuItem_Download_By_Date_Flag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    <MenuItem Name="MenuItem_Download_SelectDate" Header="_Specify Download Date" ToolTip="Pick a Date After Starting" local:MenuItemExtensions.GroupName="DownloadNew" IsCheckable="True" IsChecked="{Binding Path=MenuItem_Download_SelectDate_Flag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </MenuItem>
+                <MenuItem Header="_Prefix Filesnames">
+                    <MenuItem Name="MenuItem_Prefix_UseFolder" Header="Use Folder _Name as Prefix" IsCheckable="True" local:MenuItemExtensions.GroupName ="PrefixFiles" IsChecked="True"/>
+                    <MenuItem Name="MenuItem_Prefix_Specify" Header="_Specifiy Prefix" IsCheckable="True" local:MenuItemExtensions.GroupName ="PrefixFiles"/>
+                    <MenuItem Name="MenuItem_Prefix_DoNotUse" Header="_Do not Prefix Filenames" IsCheckable="True" local:MenuItemExtensions.GroupName ="PrefixFiles" />
+                </MenuItem>
+                <Separator />
+                <MenuItem Name="MenuItem_IsFile" Header="URL is a File (N_ot a Website)" IsCheckable="True" IsChecked="{Binding Path=IsFile, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="Select this if the Url is a file rather than a website"/>
+                <MenuItem Name="MenuItem_IsYouTubeUrl" Header="URL is a _Youtube Video (Download Audio Only)" IsCheckable="True" IsChecked="{Binding Path= MenuItem_IsYouTubeUrl_Flag, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="Downloads the Highest Quality Audio Found at the Youtube URL"/>
+                <Separator />
+                <MenuItem Name="MenuItem_ShowDownloadLog" Header="Show Download Lo_g" ToolTip="View the Progress of the Current Batch Download" IsCheckable="True" Command="local:Command.ShowDownloadLog" />
+
+            </MenuItem>
+            <MenuItem Header="_Tools">
+                <MenuItem Name="MenuItem_ShowRenamingWindow" Header="Renaming F_iles" IsCheckable="True" Command="local:Command.ShowRenamingWindow" />
+                <MenuItem Name="MenuItem_ShowStringArrayMakerWindow" Header="String Array _Maker" IsCheckable="True" Command="local:Command.ShowStringArrayMakerWindow" />
+                <MenuItem Name="MenuItem_ShowFinderWindow" Header="Urls to Recurse Finder" IsCheckable="True" Command="local:Command.ShowFinderWindow" />
+            </MenuItem>
+        </Menu >
+         <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Border  Grid.Row="0" Grid.Column="0" >
+                <StackPanel  Orientation="Vertical">
+                <Label Content="_URL of File or Webpage to Download:" Target="urltextbox"/>
+                <DockPanel  LastChildFill="True">
+                    <TextBox x:Name="urltextbox" Text="{Binding Path=Url,Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" Style="{StaticResource errorAwareTextBox}"  GotFocus="urltextbox_GotFocus"   >
+                        <TextBox.Effect>
+                            <DropShadowEffect Direction="{StaticResource DropShadowDirection }" BlurRadius="{StaticResource DropShadowBlurRadius }" ShadowDepth="{StaticResource DropShadowShadowDepth }"/>
+                        </TextBox.Effect>
+                    </TextBox>
+                </DockPanel >
+                <DockPanel LastChildFill="True">
+                    <Label Content="_Destination of File:" DockPanel.Dock="Top" Target="destinationtextbox"/>
+                        <TextBox x:Name="destinationtextbox"  Text="{Binding Path=DestinationOfFile,Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}"  GotFocus="urltextbox_GotFocus" Style="{StaticResource errorAwareTextBox}" BorderThickness="1">
+                        <TextBox.Effect>
+                            <DropShadowEffect Direction="{StaticResource DropShadowDirection }" BlurRadius="{StaticResource DropShadowBlurRadius }" ShadowDepth="{StaticResource DropShadowShadowDepth }"/>
+                        </TextBox.Effect>
+                    </TextBox>
+                </DockPanel>
+                <DockPanel>
+                    <Label Grid.Column="0" Content="_Regex to Use:" Target="RegexComboBox"/>
+                    <Label Foreground="#FFDD1D1D" Grid.Column="1" FontSize="9" Margin="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <TextBlock Text="(Use One Quotation Mark Instead of Two)" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    </Label>
+                </DockPanel>
+                <StackPanel>
+                    <ComboBox ItemsSource="{Binding ComboBoxRegexList}" IsEditable="True" TextSearch.TextPath="Name" Grid.ColumnSpan="3" Name="RegexComboBox" Height="23" Grid.Row="1" Grid.Column="0" SelectionChanged="ComboBox_SelectionChanged">
+                            <ComboBoxItem x:Name="DefaultRegex" IsSelected="True">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                                    <TextBlock Text="Default:" HorizontalAlignment="Left"/>
+                                    <TextBlock Text="href=&quot;(.+\{0})&quot;" HorizontalAlignment="Right" Margin="150 0 0 0"/>
+                                </StackPanel>
+                            </ComboBoxItem>
+                            <ComboBoxItem x:Name="OCRemixRegex">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                                    <TextBlock Text="OCRemix.org:" HorizontalAlignment="Left"/>
+                                    <TextBlock Text="href=&quot;(/remix/OCR\d+)&quot;" HorizontalAlignment="Right" Margin="66 0 0 0"/>
+                                </StackPanel>
+                            </ComboBoxItem>
+                        </ComboBox>
+
+                    <DockPanel LastChildFill="True" HorizontalAlignment="Center">
+                            <Button x:Name="_DownloadButton" Content="Download" Grid.Column="1"  Command="local:Command.Download" IsDefault="True">
+                                <Button.Effect>
+                                    <DropShadowEffect Direction="{StaticResource DropShadowDirection }" BlurRadius="{StaticResource DropShadowBlurRadius }" ShadowDepth="{StaticResource DropShadowShadowDepth }"/>
+                                </Button.Effect>
+                            </Button>
+                            <Button x:Name="ResetButton" Content="Re_set" Grid.Column="1" Command="local:Command.ResetBoxes">
+                                <Button.Effect>
+                                    <DropShadowEffect Direction="{StaticResource DropShadowDirection }" BlurRadius="{StaticResource DropShadowBlurRadius }" ShadowDepth="{StaticResource DropShadowShadowDepth }"/>
+                                </Button.Effect>
+                            </Button>
+                            <Button x:Name="CancelButton" Content="_Cancel" Grid.Column="1" Command="local:Command.Cancel">
+                                <Button.Effect>
+                                    <DropShadowEffect Direction="{StaticResource DropShadowDirection }" BlurRadius="{StaticResource DropShadowBlurRadius }" ShadowDepth="{StaticResource DropShadowShadowDepth }"/>
+                                </Button.Effect>
+                            </Button>
+                            <CheckBox x:Name="CheckBox_CancelStatus" Visibility="Hidden" MaxHeight="0" MaxWidth="0"  IsChecked="{Binding Path=ShouldCancel, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DockPanel>
+
+                </StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="95*" />
+                        <ColumnDefinition Width="174*" />
+                        <ColumnDefinition Width="304*"/>
+                    </Grid.ColumnDefinitions>
+
+
+                </Grid>
+                
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1.2*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--<DockPanel Grid.Column="0" LastChildFill="True">
+                        <Label Content="MB/s:"   FontSize="12"  FontWeight="DemiBold" DockPanel.Dock="Left"/>
+                        <Label x:Name="speedlabel" FontWeight="Normal" Content="{Binding Path=DownloadSpeed,Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  FontSize="10" Margin="0 0 0 0" />
+                    </DockPanel>-->
+
+                    <DockPanel  Grid.Column="0" HorizontalAlignment="Left">
+                        <Label Content="Downloaded (MB):" Margin="0 0 0 0" FontSize="12" FontWeight="DemiBold" />
+                        <Label x:Name="downloadedlabel" Content="{Binding Path=TotalDownloadReceived, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"  FontSize="12" FontWeight="Normal" Margin="0 0 0 0"/>
+                    </DockPanel>
+
+                    <DockPanel Grid.Column="2" HorizontalAlignment="Left">
+                        <Label Content="Total (MB):" FontSize="12"  FontWeight="DemiBold"/>
+                        <Label x:Name="totaldownloadlabel" Content="{Binding Path=TotalDownloadSize, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" FontSize="12" FontWeight="Normal" />
+                    </DockPanel>
+                    
+                </Grid>
+                <ProgressBar Grid.Row="0" x:Name="progressbar" Height="10" Value="{Binding Path=ProgressValue, UpdateSourceTrigger=PropertyChanged, Mode=OneWay}"  Background="AliceBlue" VerticalAlignment="Center" BorderThickness="0.5" Margin="5 -1.25 5 10">
+                    <ProgressBar.Effect>
+                        <DropShadowEffect Direction="{StaticResource DropShadowDirection }" BlurRadius="{StaticResource DropShadowBlurRadius }" ShadowDepth="{StaticResource DropShadowShadowDepth }"/>
+                    </ProgressBar.Effect>
+                </ProgressBar>
+            </StackPanel>
+            </Border>
+
+        </Grid>
+        <Border Margin="0 5 5 5" Grid.Column="1" Grid.Row="1">
+            <ScrollViewer DockPanel.Dock="Top" Margin="5"  ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto">
+            <StackPanel>
+                <Label Content="Download _Log:"  Padding="0" Grid.Row="0" HorizontalAlignment="Center" Target="TextBlock_Progress"/>
+                <TextBlock x:Name="TextBlock_Progress"  Grid.Row="1" Text="{Binding Path=TransferProgress, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            </StackPanel>
+        </ScrollViewer>
+        </Border>
+    </DockPanel>
+
+</Window>
